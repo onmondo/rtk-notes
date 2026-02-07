@@ -5,14 +5,18 @@ const App = () => {
   const queryClient = useQueryClient()
   const newNoteMutation = useMutation({
     mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] })
+    // NOTE: the newNote here came from the response from createNote API call
+    onSuccess: (newNote) => {
+      // queryClient.invalidateQueries({ queryKey: ['notes'] })
+      const notes = queryClient.getQueryData(['notes'])
+      queryClient.setQueryData(['notes'], notes.concat(newNote))
     }
   })
 
   const updateNoteMutation = useMutation({
     mutationFn: updateNote,
     onSuccess: () => {
+      // NOTE: By default, on success it will query the current notes thru API call
       queryClient.invalidateQueries({ queryKey: ['notes'] })
     }
   })
@@ -32,7 +36,8 @@ const App = () => {
 
   const result = useQuery({
     queryKey: ['notes'],
-    queryFn: getNotes
+    queryFn: getNotes,
+    refetchOnWindowFocus: false // NOTE: this feature with switch off the refetching if focus returns
   })
 
   if (result.isLoading) {
