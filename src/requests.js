@@ -23,3 +23,17 @@ export const createNote = async ({ content }) => {
 
   return await response.json()
 }
+
+export const updateNote = async (note) => {
+  const response = await fetch(`${baseUrl}/${note.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(note)
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to update note')
+  }
+
+  return await response.json()
+}
