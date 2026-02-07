@@ -8,3 +8,18 @@ export const getNotes = async () => {
 
   return await response.json()
 }
+
+export const createNote = async ({ content }) => {
+  const DEFAULT_IMPORTANCE = false;
+  const response = await fetch(baseUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, important: DEFAULT_IMPORTANCE })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to create new note')
+  }
+
+  return await response.json()
+}
